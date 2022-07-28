@@ -13,7 +13,7 @@ done_ws = spreadsheet.worksheet("Done")
 # ---------------------- Super Basic Implementation ----------------------
 
 oldest_question = pending_ws.row_values(2) # Get oldest question which is second row of pending worksheet
-[question, image_url] = oldest_question # Destructuring (optional)
+[question, image_url] = [i.strip() for i in oldest_question] # Destructuring + strip check
 
 if question not in done_ws.col_values(1): # Check that the question has never been asked before in Done worksheet
   

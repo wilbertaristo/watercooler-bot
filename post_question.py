@@ -2,19 +2,19 @@ import gspread
 import requests
 import random
 import os
-from dotenv import load_dotenv
+import json
 
 # API Documentations => https://docs.gspread.org/en/latest/api/models/worksheet.html
 
 # ----------------------   Setups   ----------------------
-load_dotenv()
 
-WEBHOOK_API = os.getenv("WEBHOOK_API")
-API_URL = os.getenv("API_URL")
-AUTH_TOKEN = os.getenv('AUTH_TOKEN')
-CHANNEL_ID = os.getenv('CHANNEL_ID')
+WEBHOOK_API = os.environ["WEBHOOK_API"]
+API_URL = os.environ["API_URL"]
+AUTH_TOKEN = os.environ['AUTH_TOKEN']
+CHANNEL_ID = os.environ['CHANNEL_ID']
+GOOGLE_SECRETS = os.environ['GOOGLE_SECRETS']
 
-service_account = gspread.service_account(filename="watercooler-trivia-bot.json")
+service_account = gspread.service_account_from_dict(json.loads(GOOGLE_SECRETS))
 spreadsheet = service_account.open("Ascenda Watercooler Trivias")
 
 pending_ws = spreadsheet.worksheet("Pending")
@@ -45,8 +45,10 @@ try:
       "attachments": [{"text": question, "image_url": image_url}]
   })
 
-  pending_ws.delete_rows(random_index) # Delete posted question from `Pending` worksheet
-  done_ws.insert_row([question, image_url], len(done_ws.get_values()) + 1) # Add posted question to `Done` worksheet
+#   # Delete posted question from `Pending` worksheet
+#   pending_ws.delete_rows(random_index)
+#   # Add posted question to `Done` worksheet
+#   done_ws.insert_row([question, image_url], len(done_ws.get_values()) + 1)
 
 except ValueError:
   print("Out of Questions!")

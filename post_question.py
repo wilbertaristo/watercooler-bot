@@ -45,10 +45,10 @@ try:
       "attachments": [{"text": question, "image_url": image_url}]
   })
 
-#   # Delete posted question from `Pending` worksheet
-#   pending_ws.delete_rows(random_index)
-#   # Add posted question to `Done` worksheet
-#   done_ws.insert_row([question, image_url], len(done_ws.get_values()) + 1)
+  # Delete posted question from `Pending` worksheet
+  pending_ws.delete_rows(random_index)
+  # Add posted question to `Done` worksheet
+  done_ws.insert_row([question, image_url], len(done_ws.get_values()) + 1)
 
 except ValueError:
   print("Out of Questions!")

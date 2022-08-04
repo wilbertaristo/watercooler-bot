@@ -37,7 +37,7 @@ def get_random_qn():
 
 def weekend():
   weekno = datetime.datetime.today().weekday()
-  return weekno > 5
+  return weekno >= 5
 
 if not weekend():
   try:

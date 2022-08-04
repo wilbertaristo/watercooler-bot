@@ -3,6 +3,7 @@ import requests
 import random
 import os
 import json
+import datetime
 
 # API Documentations => https://docs.gspread.org/en/latest/api/models/worksheet.html
 
@@ -34,21 +35,26 @@ def get_random_qn():
   else:
     return [question, image_url, random_index] # Return valid random question
 
-try:
-  [question, image_url, random_index] = get_random_qn()
+def weekend():
+  weekno = datetime.datetime.today().weekday()
+  return weekno > 5
 
-  post_request = requests.post(API_URL, headers={
-      "Content-type": "application/json",
-      "Authorization": f"Bearer {AUTH_TOKEN}",
-  }, json={
-      "channel": CHANNEL_ID,
-      "attachments": [{"text": question, "image_url": image_url}]
-  })
+if not weekend():
+  try:
+    [question, image_url, random_index] = get_random_qn()
 
-  # Delete posted question from `Pending` worksheet
-  pending_ws.delete_rows(random_index)
-  # Add posted question to `Done` worksheet
-  done_ws.insert_row([question, image_url], len(done_ws.get_values()) + 1)
+    post_request = requests.post(API_URL, headers={
+        "Content-type": "application/json",
+        "Authorization": f"Bearer {AUTH_TOKEN}",
+    }, json={
+        "channel": CHANNEL_ID,
+        "attachments": [{"text": question, "image_url": image_url}]
+    })
 
-except ValueError:
-  print("Out of Questions!")
+    # Delete posted question from `Pending` worksheet
+    pending_ws.delete_rows(random_index)
+    # Add posted question to `Done` worksheet
+    done_ws.insert_row([question, image_url], len(done_ws.get_values()) + 1)
+
+  except ValueError:
+    print("Out of Questions!")

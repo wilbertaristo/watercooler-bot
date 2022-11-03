@@ -35,11 +35,19 @@ def get_random_qn():
   else:
     return [question, image_url, random_index] # Return valid random question
 
-def weekend():
+def send_trivia():
   weekno = datetime.datetime.today().weekday()
-  return weekno >= 5
+  # 0 Monday
+  # 1 Tuesday
+  # 2 Wednesday
+  # 3 Thursday
+  # 4 Friday
+  # 5 Saturday
+  # 6 Sunday
+  # Only send trivias on Monday, Wednesday, and Friday
+  return weekno in [0, 2, 4]
 
-if not weekend():
+if send_trivia():
   try:
     [question, image_url, random_index] = get_random_qn()
 

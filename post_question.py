@@ -18,7 +18,7 @@ GOOGLE_SECRETS = os.environ['GOOGLE_SECRETS']
 service_account = gspread.service_account_from_dict(json.loads(GOOGLE_SECRETS))
 spreadsheet = service_account.open("Ascenda Watercooler Trivias")
 
-pending_ws = spreadsheet.worksheet("Pending")
+pending_ws = spreadsheet.worksheet("Pending Bot Pickup")
 done_ws = spreadsheet.worksheet("Done")
 
 # ---------------------- Super Basic Implementation ----------------------

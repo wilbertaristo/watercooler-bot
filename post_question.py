@@ -14,7 +14,8 @@ load_dotenv()
 WEBHOOK_API = os.getenv("WEBHOOK_API")
 API_URL = os.getenv("API_URL")
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
-CHANNEL_ID = os.getenv('WATERCOOLER_DEV_CHANNEL_ID')
+TESTING_CHANNEL_ID = os.getenv('WATERCOOLER_DEV_CHANNEL_ID')
+CHANNEL_ID = os.getenv('WATERCOOLER_PRODUCTION_CHANNEL_ID')
 GOOGLE_SECRETS = os.getenv('GOOGLE_SECRETS')
 
 service_account = gspread.service_account_from_dict(json.loads(GOOGLE_SECRETS))
@@ -37,6 +38,24 @@ def get_random_qn():
   else:
     return [question, image_url, random_index] # Return valid random question
 
+def send_attachment(channel_id, text, image_url):
+  return requests.post(API_URL, headers={
+      "Content-type": "application/json",
+      "Authorization": f"Bearer {AUTH_TOKEN}",
+  }, json={
+      "channel": channel_id,
+      "attachments": [{"text": text, "image_url": image_url}]
+  })
+
+def send_message(channel_id, text):
+  return requests.post(API_URL, headers={
+      "Content-type": "application/json",
+      "Authorization": f"Bearer {AUTH_TOKEN}",
+  }, json={
+      "channel": channel_id,
+      "text": text
+  })
+
 def send_trivia():
   weekno = datetime.datetime.today().weekday()
   # 0 Monday
@@ -53,13 +72,10 @@ if send_trivia():
   try:
     [question, image_url, random_index] = get_random_qn()
 
-    post_request = requests.post(API_URL, headers={
-        "Content-type": "application/json",
-        "Authorization": f"Bearer {AUTH_TOKEN}",
-    }, json={
-        "channel": CHANNEL_ID,
-        "attachments": [{"text": question, "image_url": image_url}]
-    })
+    post_request = send_attachment(CHANNEL_ID, question, image_url)
+
+    # Optional: Send custom messages
+    # post_reqeust = send_message(CHANNEL_ID, "Hello, this is Watercooler Bot :)")
 
     # Delete posted question from `Pending` worksheet
     pending_ws.delete_rows(random_index)

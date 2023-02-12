@@ -3,17 +3,19 @@ import requests
 import random
 import os
 import json
+from dotenv import load_dotenv
 import datetime
 
 # API Documentations => https://docs.gspread.org/en/latest/api/models/worksheet.html
 
 # ----------------------   Setups   ----------------------
+load_dotenv()
 
-WEBHOOK_API = os.environ["WEBHOOK_API"]
-API_URL = os.environ["API_URL"]
-AUTH_TOKEN = os.environ['AUTH_TOKEN']
-CHANNEL_ID = os.environ['CHANNEL_ID']
-GOOGLE_SECRETS = os.environ['GOOGLE_SECRETS']
+WEBHOOK_API = os.getenv("WEBHOOK_API")
+API_URL = os.getenv("API_URL")
+AUTH_TOKEN = os.getenv('AUTH_TOKEN')
+CHANNEL_ID = os.getenv('WATERCOOLER_DEV_CHANNEL_ID')
+GOOGLE_SECRETS = os.getenv('GOOGLE_SECRETS')
 
 service_account = gspread.service_account_from_dict(json.loads(GOOGLE_SECRETS))
 spreadsheet = service_account.open("Ascenda Watercooler Trivias")
@@ -65,4 +67,12 @@ if send_trivia():
     done_ws.insert_row([question, image_url], len(done_ws.get_values()) + 1)
 
   except ValueError:
-    print("Out of Questions!")
+    requests.post(API_URL, headers={
+        "Content-type": "application/json",
+        "Authorization": f"Bearer {AUTH_TOKEN}",
+    }, json={
+        "channel": CHANNEL_ID,
+        "attachments": [{
+          "text": "Water depleted. Please ping the bonding agents to refill water :sadge:", "image_url": "https://media.giphy.com/media/PjfByFswbz7w5jRJ6e/giphy-downsized.gif"
+        }]
+    })

@@ -11,7 +11,6 @@ import datetime
 # ----------------------   Setups   ----------------------
 load_dotenv()
 
-WEBHOOK_API = os.getenv("WEBHOOK_API")
 API_URL = os.getenv("API_URL")
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
 TESTING_CHANNEL_ID = os.getenv('WATERCOOLER_DEV_CHANNEL_ID')

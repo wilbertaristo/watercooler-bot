@@ -1,6 +1,10 @@
-# Ascenda Watercooler Bot
+# Watercooler Bot
 
-Automation bot to post watercooler questions in Ascenda's `#water-cooler` slack channel  :)
+Automation bot originally created to post watercooler questions in my company's `#watercooler-chats` slack channel  :)
+
+You can setup this bot for your own slack channel. Full walkthrough here --> https://aristo.hashnode.dev/homemade-watercooler-chat-bot
+
+General instructions below 👇
 
 ## Setup
 - Create your Slack App and take note of the API keys (look up Slack documentation for this)
